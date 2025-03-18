@@ -93,7 +93,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s ease-in-out; /* Thêm transition cho mượt */
         }
         .photo-frame:hover {
             transform: scale(1.1);
@@ -120,61 +119,58 @@
             to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
         .note {
-    display: none;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    border-radius: 10px;
-    z-index: 8;
-    text-align: center;
-    display: table-cell;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
-    white-space: normal;
-    word-break: break-word;
-    font-family: 'Times New Roman', serif;
-    box-sizing: border-box;
-    overflow: hidden;
-    line-height: 1.2;
-}
- .photo-frame{
+            display: none;
+            position: absolute;
+            background-color: white(0, 0, 0, 0.7);
+            color: black;
+            border-radius: 10px;
+            z-index: 8;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: normal; /* Cho phép chữ xuống dòng nếu cần */
+            word-break: break-word; /* Ngắt từ nếu cần */
+        }
+        .photo-frame{
           position:relative;
         }
     </style>
 </head>
 <body>
-    <div class="heart-container" onclick="fillHeart()">
-        <div class="fill" id="fill"></div>
-        <div class="click-text">Click here! 💖</div>
-    </div>
+  <div class="heart-container" onclick="fillHeart()">
+    <div class="fill" id="fill"></div>
+    <div class="click-text">Click here! 💖</div>
+</div>
 
-    <div class="content-container" id="contentContainer">
-        <div class="anniversary-text">🎂 hélo bà chủ shop 💖</div>
-
-        <div class="photo-grid">
-            <div class="photo-frame" data-note=" Cổ tên Mỹ Uyn ">
-                <img id="photo1" src="z6376983877357_08120225470302d5c0700bc517d79d3c.jpg" alt="Ảnh 1" onclick="toggleNote(this, 'photo1')">
-            </div>
-            <div class="photo-frame" data-note="Cổ sinh năm 2001">
-                <img id="photo2" src="z6376983889215_19482c05811b4b24ea06c4faaa8cb861.jpg" alt="Ảnh 2" onclick="toggleNote(this, 'photo2')">
-            </div>
-            <div class="photo-frame" data-note="Mà còn chechou ">
-                <img id="photo3" src="z6376983893583_c105f0b486c66c9b8645d111a02ddf3e.jpg" alt="Ảnh 3" onclick="toggleNote(this, 'photo3')">
-            </div>
-            <div class="photo-frame" data-note="vợ HIEUTHUHAI2 mãi đỉnh         ">
-                <img id="photo4" src="z6376983893848_37bff905f0dce2c431a134530a4d7600.jpg" alt="Ảnh 4" onclick="toggleNote(this, 'photo4')">
-            </div>
+<div class="content-container" id="contentContainer">
+    <div class="anniversary-text">🎂 hélo bà chủ shop 💖</div>
+    
+    <div class="photo-grid">
+        <div class="photo-frame" data-note=" Cổ tên Mỹ Uyn ">
+            <img id="photo1" src="z6376983877357_08120225470302d5c0700bc517d79d3c.jpg" alt="Ảnh 1" onclick="showNote(this)">
         </div>
-        <div id="note" style="display: none;"></div>
-
-        <div class="spotify-wrapper">
-            <iframe id="spotify-player" src="https://open.spotify.com/embed/track/4nXrVH5xwN1w6TpmP7uu8n"
-                frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-            </iframe>
+        <div class="photo-frame" data-note="Cổ sinh năm 2001">
+            <img id="photo2" src="z6376983889215_19482c05811b4b24ea06c4faaa8cb861.jpg" alt="Ảnh 2" onclick="showNote(this)">
         </div>
-        <div class="note" id="note"></div>
+        <div class="photo-frame" data-note="Mà còn chechou ">
+            <img id="photo3" src="z6376983893583_c105f0b486c66c9b8645d111a02ddf3e.jpg" alt="Ảnh 3" onclick="showNote(this)">
+        </div>
+        <div class="photo-frame" data-note="vợ HIEUTHUHAI2 mãi đỉnh
+        ">
+            <img id="photo4" src="z6376983893848_37bff905f0dce2c431a134530a4d7600.jpg" alt="Ảnh 4" onclick="showNote(this)">
+        </div>
     </div>
+    
+    <div class="spotify-wrapper">
+        <iframe id="spotify-player" 
+                src="https://open.spotify.com/embed/track/4nXrVH5xwN1w6TpmP7uu8n"
+                frameborder="0" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+        </iframe>
+    </div>
+    <div class="note" id="note"></div>
+</div>
 
 <script>
      function fillHeart() {
@@ -199,52 +195,54 @@
     }
     setInterval(createFallingHearts, 1000);
 
-    let imageStates = {
-        'photo1': true,
-        'photo2': true,
-        'photo3': true,
-        'photo4': true
-    };
+        let originalImages = {};
+        document.querySelectorAll('.photo-grid img').forEach(img => {
+            originalImages[img.id] = img.src;
+        });
 
-    function toggleNote(element, imageId) {
-    const photoFrame = element.parentElement;
-    const noteText = photoFrame.getAttribute('data-note');
-    const isVisible = imageStates[imageId];
-    const noteDiv = document.getElementById('note');
-
-    if (isVisible) {
-        element.style.opacity = '0';
-        noteDiv.textContent = noteText;
-        noteDiv.style.display = 'flex';
-
-        const rect = photoFrame.getBoundingClientRect();
-        noteDiv.style.position = 'absolute';
-        noteDiv.style.left = rect.left + 'px';
-        noteDiv.style.top = rect.top + 'px';
-        noteDiv.style.width = rect.width + 'px';
-        noteDiv.style.height = rect.height + 'px';
-
-        let fontSize = Math.min(rect.width / noteDiv.textContent.length * 1.5, rect.height / 2);
-        fontSize = Math.max(10, fontSize);
-
-        const maxFontSize = rect.height * 0.7;
-
-        if (fontSize > maxFontSize) {
-            fontSize = maxFontSize;
+        function resetImages() {
+            document.querySelectorAll('.photo-grid img').forEach(img => {
+                img.style.display = 'block';
+                img.src = originalImages[img.id];
+            });
+            document.getElementById('note').style.display = 'none';
         }
 
-        noteDiv.style.fontSize = fontSize + 'px';
-        const lineHeight = parseFloat(window.getComputedStyle(noteDiv).lineHeight); // Lấy line-height
-    const offset = (noteDiv.offsetHeight - lineHeight) / 2; // Tính toán bù trừ
+        let imageStates = {}; // Lưu trạng thái của từng ảnh
 
-    noteDiv.style.paddingTop = offset + 'px'; // Thêm bù trừ vào padding top
-    } else {
-        element.style.opacity = '1';
-        noteDiv.style.display = 'none';
-    }
+function showNote(element) {
+  const imageId = element.id;
+  const photoFrame = element.parentElement;
+  const noteText = photoFrame.getAttribute('data-note');
+  const noteDiv = document.getElementById('note');
 
-    imageStates[imageId] = !isVisible;
+  if (imageStates[imageId] === undefined) {
+    imageStates[imageId] = true; // Khởi tạo trạng thái ban đầu
+  }
+
+  if (imageStates[imageId]) {
+    element.style.opacity = '0'; // Ẩn ảnh
+    noteDiv.textContent = noteText;
+    noteDiv.style.display = 'flex';
+
+    // Đặt vị trí note dựa trên vị trí ảnh
+    const rect = photoFrame.getBoundingClientRect();
+    noteDiv.style.left = rect.left + 'px';
+    noteDiv.style.top = rect.top + 'px';
+    noteDiv.style.width = rect.width + 'px';
+    noteDiv.style.height = rect.height + 'px';
+
+    // Điều chỉnh kích thước chữ
+    let fontSize = Math.min(rect.width / noteDiv.textContent.length * 1.5, rect.height / 2);
+    fontSize = Math.max(10, fontSize);
+    noteDiv.style.fontSize = fontSize + 'px';
+  } else {
+    element.style.opacity = '1'; // Hiện ảnh
+    noteDiv.style.display = 'none';
+  }
+
+  imageStates[imageId] = !imageStates[imageId]; // Đảo ngược trạng thái
 }
-</script>
+    </script>
 </body>
 </html>
